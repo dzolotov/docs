@@ -2,11 +2,11 @@ package com.sismics.docs.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,6 @@ import com.sismics.docs.event.SearchEvent;
 import com.sismics.docs.listener.HttpCallback;
 import com.sismics.docs.listener.RecyclerItemClickListener;
 import com.sismics.docs.resource.DocumentResource;
-import com.sismics.docs.ui.view.DividerItemDecoration;
 import com.sismics.docs.ui.view.EmptyRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;

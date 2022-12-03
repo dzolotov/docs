@@ -74,16 +74,16 @@ public class FileResource extends BaseResource {
      * @param callback Callback
      * @throws Exception
      */
-    public static void addSync(Context context, String documentId, final InputStream is, HttpCallback callback) throws Exception {
+    public static void addSync(Context context, String documentId, final String filename, final String mediaType, final InputStream is, HttpCallback callback) throws Exception {
         Request request = new Request.Builder()
                 .url(HttpUrl.parse(getApiUrl(context) + "/file"))
                 .put(new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
                         .addFormDataPart("id", documentId)
-                        .addFormDataPart("file", "file", new RequestBody() {
+                        .addFormDataPart("file", filename, new RequestBody() {
                             @Override
                             public MediaType contentType() {
-                                return MediaType.parse("application/octet-stream");
+                                return MediaType.parse(mediaType);
                             }
 
                             @Override

@@ -4,12 +4,16 @@ import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
+import android.provider.OpenableColumns;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.sismics.docs.R;
@@ -87,6 +91,17 @@ public class FileUploadService extends IntentService {
         }
     }
 
+    private String queryName(ContentResolver resolver, Uri uri) {
+        Cursor returnCursor =
+                resolver.query(uri, null, null, null, null);
+        assert returnCursor != null;
+        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        returnCursor.moveToFirst();
+        String name = returnCursor.getString(nameIndex);
+        returnCursor.close();
+        return name;
+    }
+
     /**
      * Actually uploading the file.
      *
@@ -95,8 +110,11 @@ public class FileUploadService extends IntentService {
      * @throws IOException e
      */
     private void handleFileUpload(final String documentId, final Uri uri) throws Exception {
+        final ContentResolver contentResolver = getContentResolver();
+        String mediaType = contentResolver.getType(uri);
+        String filename = queryName(contentResolver, uri);
         final InputStream is = getContentResolver().openInputStream(uri);
-        FileResource.addSync(this, documentId, is, new HttpCallback() {
+        FileResource.addSync(this, documentId, filename, mediaType, is, new HttpCallback() {
             @Override
             public void onSuccess(JSONObject response) {
                 EventBus.getDefault().post(new FileAddEvent(documentId, response.optString("id")));
